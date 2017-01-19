@@ -135,12 +135,20 @@ gulp.task("minify", ["styles"], function () {
     // Minify CSS
     .pipe($.if("*.css", $.minifyCss()))
     // Start cache busting the files
-    .pipe($.revAll({ ignore: ["index.html", ".eot", ".svg", ".ttf", ".woff"] }))
+    .pipe($.revAll({
+        ignore: [
+        ".html",
+        ".eot",
+        ".svg",
+        ".ttf",
+        ".woff",
+        ]
+    }))
     .pipe(assets.restore())
     // Replace the asset names with their cache busted names
     .pipe($.revReplace())
     // Minify HTML
-    .pipe($.if("*.html", $.htmlmin({
+    .pipe($.if("src/index.html", $.htmlmin({
       removeComments: true,
       removeCommentsFromCDATA: true,
       removeCDATASectionsFromCDATA: true,
@@ -162,15 +170,11 @@ gulp.task("deploy", [], function () {
     .pipe($.ghPages({branch: "gh-pages"}));
 });
 
-gulp.task('elm-init', elm.init);
-gulp.task('elm', ['elm-init'], compileElm(true));
-// Compile elm, without the debug flag.
-gulp.task('elm-publish', ['elm-init'], compileElm(false));
 
 /**
  * Compile Elm.
  */
-compileElm = function(debug) {
+var compileElm = function(debug) {
   return gulp.src('src/elm/Main.elm')
     .pipe(plumber())
     .pipe(elm({'debug': debug, 'warn' : true}))
@@ -185,6 +189,12 @@ compileElm = function(debug) {
     })
     .pipe(gulp.dest('serve'));
 };
+
+
+gulp.task('elm-init', elm.init);
+gulp.task('elm', ['elm-init'], function() {return compileElm(true)});
+// Compile elm, without the debug flag.
+gulp.task('elm-publish', ['elm-init'], function() {return compileElm(false)});
 
 // BrowserSync will serve our site on a local server for us and other devices to use
 // It will also autoreload across all devices as well as keep the viewport synchronized
