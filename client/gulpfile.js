@@ -163,10 +163,17 @@ gulp.task("deploy", [], function () {
 });
 
 gulp.task('elm-init', elm.init);
-gulp.task('elm', ['elm-init'], function(){
+gulp.task('elm', ['elm-init'], compileElm(true));
+// Compile elm, without the debug flag.
+gulp.task('elm-publish', ['elm-init'], compileElm(false));
+
+/**
+ * Compile Elm.
+ */
+compileElm = function(debug) {
   return gulp.src('src/elm/Main.elm')
     .pipe(plumber())
-    .pipe(elm({'debug': true, 'warn' : true}))
+    .pipe(elm({'debug': debug, 'warn' : true}))
     .on('error', function(err) {
         console.error(err.message);
 
@@ -177,7 +184,7 @@ gulp.task('elm', ['elm-init'], function(){
         fs.writeFileSync('serve/index.html', "<!DOCTYPE HTML><html><body><pre>" + err.message + "</pre></body></html>");
     })
     .pipe(gulp.dest('serve'));
-});
+};
 
 // BrowserSync will serve our site on a local server for us and other devices to use
 // It will also autoreload across all devices as well as keep the viewport synchronized
@@ -218,7 +225,7 @@ gulp.task("default", ["serve:dev", "watch"]);
 
 // Builds the site but doesnt serve it to you
 // @todo: Add "bower" here
-gulp.task("build", gulpSequence("clean:dev", ["styles", "copy:dev", "elm"]));
+gulp.task("build", gulpSequence("clean:dev", ["styles", "copy:dev", "elm-publish"]));
 
 // Builds your site with the "build" command and then runs all the optimizations on
 // it and outputs it to "./dist"
