@@ -19,8 +19,8 @@ type alias Model =
     { boards : BoardsDict
     , activeBoard : Maybe Board
     , messages : BoardMessagesDict
-    , newMessage : Maybe String
-    , newBoard : Maybe String
+    , newMessage : String
+    , newBoard : String
     }
 
 
@@ -69,6 +69,6 @@ emptyModel =
     { boards = Dict.empty
     , activeBoard = Nothing
     , messages = Dict.empty
-    , newMessage = Nothing
-    , newBoard = Nothing
+    , newMessage = ""
+    , newBoard = ""
     }

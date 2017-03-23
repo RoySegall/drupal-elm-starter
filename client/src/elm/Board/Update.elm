@@ -63,45 +63,35 @@ update backendUrl accessToken msg model =
                 )
 
         UpdateMessage newMessage ->
-            ( { model | newMessage = Just newMessage }
+            ( { model | newMessage = newMessage }
             , Cmd.none
             )
 
         SendMessage ->
             let
                 command =
-                    case model.newMessage of
-                        Just message ->
-                            case model.activeBoard of
-                                Just board ->
-                                    sendBoardMessageToBackend backendUrl accessToken board.id message
-
-                                Nothing ->
-                                    Cmd.none
+                    case model.activeBoard of
+                        Just board ->
+                            sendBoardMessageToBackend backendUrl accessToken board.id model.newMessage
 
                         Nothing ->
                             Cmd.none
             in
-                ( model
+                ( { model | newMessage = "" }
                 , command
                 )
 
         UpdateBoard newBoard ->
-            ( { model | newBoard = Just newBoard }
+            ( { model | newBoard = newBoard }
             , Cmd.none
             )
 
         SendBoard ->
             let
                 command =
-                    case model.newBoard of
-                        Just board ->
-                            sendBoardToBackend backendUrl accessToken board
-
-                        Nothing ->
-                            Cmd.none
+                    sendBoardToBackend backendUrl accessToken model.newBoard
             in
-                ( model
+                ( { model | newBoard = "" }
                 , command
                 )
 

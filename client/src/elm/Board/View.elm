@@ -13,14 +13,14 @@ view model =
         [ class "ui grid" ]
         [ div
             [ class "row" ]
-            [ viewBoards model.boards
-            , viewBoard model.activeBoard model.messages
+            [ viewBoards model.boards model.newBoard
+            , viewBoard model.activeBoard model.messages model.newMessage
             ]
         ]
 
 
-viewBoard : Maybe Board -> BoardMessagesDict -> Html Msg
-viewBoard activeBoard messages =
+viewBoard : Maybe Board -> BoardMessagesDict -> String -> Html Msg
+viewBoard activeBoard messages newMessage =
     case activeBoard of
         Just board ->
             div
@@ -40,6 +40,7 @@ viewBoard activeBoard messages =
                     [ input
                         [ placeholder "add new message"
                         , onInput UpdateMessage
+                        , value newMessage
                         ]
                         []
                     , a
@@ -55,8 +56,8 @@ viewBoard activeBoard messages =
             div [ class "column" ] []
 
 
-viewBoards : BoardsDict -> Html Msg
-viewBoards boards =
+viewBoards : BoardsDict -> String -> Html Msg
+viewBoards boards newBoard =
     div
         [ class "five wide column" ]
         [ h2
@@ -73,6 +74,7 @@ viewBoards boards =
             [ input
                 [ placeholder "add new board"
                 , onInput UpdateBoard
+                , value newBoard
                 ]
                 []
             , a
