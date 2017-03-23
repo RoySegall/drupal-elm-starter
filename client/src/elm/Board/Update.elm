@@ -48,7 +48,7 @@ update backendUrl accessToken msg model =
                 )
 
         HandleFetchedBoardMessages (Ok boardMessagesDict) ->
-            ( { model | messages = boardMessagesDict }
+            ( { model | messages = Dict.union boardMessagesDict model.messages }
             , Cmd.none
             )
 
