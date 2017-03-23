@@ -29,6 +29,7 @@ elmApp.ports.pusherKey.subscribe(function(appKey) {
                     data: data
                 };
                 elmApp.ports.pusherItemMessages.send(event);
+                elmApp.ports.pusherBoardMessages.send(event);
             });
         });
     }

@@ -2,6 +2,7 @@ module App.View exposing (..)
 
 import App.Model exposing (..)
 import App.PageType exposing (Page(..))
+import Board.View
 import Config.View
 import Html exposing (..)
 import Html.Attributes exposing (alt, class, classList, href, src, style, target)
@@ -214,7 +215,9 @@ viewMainContent model =
                         ]
 
             _ ->
-                viewContent
+                div []
+                    [ Html.map MsgBoardManager <| Board.View.view model.boards
+                    ]
 
 
 {-| Get menu items classes. This function gets the active page and checks if

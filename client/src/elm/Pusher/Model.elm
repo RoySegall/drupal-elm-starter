@@ -1,5 +1,6 @@
 module Pusher.Model exposing (..)
 
+import Board.Model exposing (Board, BoardMessage)
 import Item.Model exposing (Item, ItemId)
 
 
@@ -23,10 +24,15 @@ type alias PusherEvent =
 
 type PusherEventData
     = ItemUpdate Item
+    | BoardMessageUpdate BoardMessage
+    | BoardUpdate Board
 
 
 {-| Return the event names that should be added via JS.
 -}
 eventNames : List String
 eventNames =
-    [ "item__update" ]
+    [ "item__update"
+    , "create__board_messages"
+    , "create__board"
+    ]

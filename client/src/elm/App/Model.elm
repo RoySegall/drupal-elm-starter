@@ -8,9 +8,11 @@ module App.Model
         )
 
 import App.PageType exposing (Page(..))
+import Board.Model
 import Config.Model
 import Date exposing (Date)
 import Pages.Login.Model exposing (emptyModel, Model)
+import Pusher.Model exposing (PusherEvent)
 import RemoteData exposing (RemoteData(..), WebData)
 import ItemManager.Model exposing (emptyModel, Model)
 import Time exposing (Time)
@@ -19,7 +21,9 @@ import User.Model exposing (..)
 
 type Msg
     = HandleOfflineEvent (Result String Bool)
+    | HandlePusherEvent (Result String PusherEvent)
     | Logout
+    | MsgBoardManager Board.Model.Msg
     | MsgItemManager ItemManager.Model.Msg
     | PageLogin Pages.Login.Model.Msg
     | SetActivePage Page
@@ -38,6 +42,7 @@ type alias Model =
     , pageItem : ItemManager.Model.Model
     , sidebarOpen : Bool
     , user : WebData User
+    , boards : Board.Model.Model
     }
 
 
@@ -63,4 +68,5 @@ emptyModel =
     , pageItem = ItemManager.Model.emptyModel
     , sidebarOpen = False
     , user = NotAsked
+    , boards = Board.Model.emptyModel
     }

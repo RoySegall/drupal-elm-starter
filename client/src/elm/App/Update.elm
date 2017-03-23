@@ -2,16 +2,17 @@ port module App.Update exposing (init, update, subscriptions)
 
 import App.Model exposing (..)
 import App.PageType exposing (Page(..))
+import Board.Update
 import Config
 import Date
 import Dict
-import Http
 import ItemManager.Model
 import ItemManager.Update
 import Json.Decode exposing (bool, decodeValue)
 import Json.Encode exposing (Value)
 import Pages.Login.Update
-import Pusher.Model
+import Pusher.Decoder exposing (decodePusherEvent)
+import Pusher.Model exposing (PusherEventData(..))
 import Pusher.Utils exposing (getClusterName)
 import RemoteData exposing (RemoteData(..), WebData)
 import Task
@@ -43,7 +44,10 @@ init flags =
                                 -- Check if we have already an access token.
                                 ( defaultCmds, Login )
                             else
-                                ( [ Cmd.map PageLogin <| Pages.Login.Update.fetchUserFromBackend config.backendUrl flags.accessToken ] ++ defaultCmds
+                                ( [ Cmd.map PageLogin <| Pages.Login.Update.fetchUserFromBackend config.backendUrl flags.accessToken
+                                  , Cmd.map MsgBoardManager <| Board.Update.fetchBoardsFromBackend config.backendUrl flags.accessToken
+                                  ]
+                                    ++ defaultCmds
                                 , emptyModel.activePage
                                 )
                     in
@@ -86,6 +90,33 @@ update msg model =
             HandleOfflineEvent (Err err) ->
                 model ! []
 
+            HandlePusherEvent result ->
+                case result of
+                    Ok event ->
+                        case event.data of
+                            BoardMessageUpdate data ->
+                                let
+                                    messages =
+                                        Dict.insert data.id data model.boards.messages
+
+                                    boards =
+                                        model.boards
+
+                                    updatedBoards =
+                                        { boards | messages = messages }
+                                in
+                                    ( { model | boards = updatedBoards }
+                                    , Cmd.none
+                                    )
+
+                            _ ->
+                                ( model
+                                , Cmd.none
+                                )
+
+                    Err err ->
+                        ( model, Cmd.none )
+
             Logout ->
                 ( { emptyModel
                     | accessToken = ""
@@ -123,6 +154,18 @@ update msg model =
                     _ ->
                         -- If we don't have a user, we have nothing to do.
                         model ! []
+
+            MsgBoardManager msg ->
+                let
+                    ( val, cmds ) =
+                        Board.Update.update backendUrl model.accessToken msg model.boards
+
+                    modelUpdated =
+                        { model | boards = val }
+                in
+                    ( modelUpdated
+                    , Cmd.map MsgBoardManager cmds
+                    )
 
             PageLogin msg ->
                 let
@@ -237,9 +280,17 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
         [ Sub.map MsgItemManager <| ItemManager.Update.subscriptions model.pageItem model.activePage
+        , pusherBoardMessages (decodeValue decodePusherEvent >> HandlePusherEvent)
         , Time.every minute Tick
         , offline (decodeValue bool >> HandleOfflineEvent)
         ]
+
+
+{-| A single port for all messages coming in from pusher for a `Item` ... they
+will flow in once `subscribeItem` is called. We'll wrap the structures on
+the Javascript side so that we can dispatch them from here.
+-}
+port pusherBoardMessages : (Value -> msg) -> Sub msg
 
 
 {-| Send access token to JS.
