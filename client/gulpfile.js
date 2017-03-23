@@ -131,24 +131,24 @@ gulp.task("minify", ["styles"], function () {
 
   return gulp.src("serve/**/*.*")
     // Concatenate JavaScript files and preserve important comments
-    .pipe($.if("*.js", $.uglify({preserveComments: "some"})))
+    //.pipe($.if("*.js", $.uglify({preserveComments: "some"})))
     // Minify CSS
-    .pipe($.if("*.css", $.minifyCss()))
+    //.pipe($.if("*.css", $.minifyCss()))
     // Start cache busting the files
-    .pipe($.revAll({ ignore: ["index.html", ".eot", ".svg", ".ttf", ".woff"] }))
-    .pipe(assets.restore())
+    //.pipe($.revAll({ ignore: ["index.html", ".eot", ".svg", ".ttf", ".woff"] }))
+    //.pipe(assets.restore())
     // Replace the asset names with their cache busted names
-    .pipe($.revReplace())
+    //.pipe($.revReplace())
     // Minify HTML
-    .pipe($.if("*.html", $.htmlmin({
-      removeComments: true,
-      removeCommentsFromCDATA: true,
-      removeCDATASectionsFromCDATA: true,
-      collapseWhitespace: true,
-      collapseBooleanAttributes: true,
-      removeAttributeQuotes: true,
-      removeRedundantAttributes: true
-    })))
+    //.pipe($.if("*.html", $.htmlmin({
+      //removeComments: true,
+      //removeCommentsFromCDATA: true,
+      //removeCDATASectionsFromCDATA: true,
+      //collapseWhitespace: true,
+      //collapseBooleanAttributes: true,
+      //removeAttributeQuotes: true,
+      //removeRedundantAttributes: true
+    //})))
     // Send the output to the correct folder
     .pipe(gulp.dest("dist"))
     .pipe($.size({title: "optimizations"}));
@@ -223,5 +223,5 @@ gulp.task("build", gulpSequence("clean:dev", ["styles", "copy:dev", "elm"]));
 // Builds your site with the "build" command and then runs all the optimizations on
 // it and outputs it to "./dist"
 gulp.task("publish", ["build", "clean:prod"], function () {
-  gulp.start("cname", "images", "fonts");
+  gulp.start("minify", "cname", "images", "fonts");
 });
