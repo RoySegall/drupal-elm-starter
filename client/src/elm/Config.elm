@@ -33,8 +33,8 @@ livePantheon =
 configs : Dict String Model
 configs =
     Dict.fromList
-        [ ( "dev-drupal-elm-starter.pantheonsite.io", devPantheon )
-        , ( "test-drupal-elm-starter.pantheonsite.io", testPantheon )
-        , ( "live-drupal-elm-starter.pantheonsite.io", livePantheon )
+        [ ( "http://dev-ddd-nuntius.pantheonsite.io", devPantheon )
+        , ( "http://test-ddd-nuntius.pantheonsite.io", testPantheon )
+        , ( "http://live-ddd-nuntius.pantheonsite.io", livePantheon )
         ]
         |> Dict.union localConfigs
