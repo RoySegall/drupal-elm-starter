@@ -143,6 +143,12 @@ update currentDate backendUrl accessToken user msg model =
                             , Nothing
                             )
 
+                        _ ->
+                            ( model
+                            , Cmd.none
+                            , Nothing
+                            )
+
                 Err err ->
                     let
                         _ =

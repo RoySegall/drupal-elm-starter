@@ -4,6 +4,7 @@ module Utils.Json
         , decodeEmptyArrayAsEmptyDict
         , decodeError
         , decodeFloat
+        , decodeId
         , decodeInt
         , decodeListAsDict
         , decodeListAsDictByProperty
@@ -76,6 +77,16 @@ decodeInt =
                         Err _ ->
                             fail "Cannot convert string to integer"
                 )
+        ]
+
+
+decodeId : Decoder String
+decodeId =
+    oneOf
+        [ string
+        , int
+            |> andThen
+                (toString >> succeed)
         ]
 
 

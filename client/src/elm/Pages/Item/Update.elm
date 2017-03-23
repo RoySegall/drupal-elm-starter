@@ -23,5 +23,11 @@ update backendUrl accessToken user msg item =
                     , Nothing
                     )
 
+                _ ->
+                    ( item
+                    , Cmd.none
+                    , Nothing
+                    )
+
         SetRedirectPage page ->
             ( item, Cmd.none, Just page )
