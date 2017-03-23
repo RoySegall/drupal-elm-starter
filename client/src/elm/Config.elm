@@ -33,8 +33,8 @@ livePantheon =
 configs : Dict String Model
 configs =
     Dict.fromList
-        [ ( "http://dev-ddd-nuntius.pantheonsite.io", devPantheon )
-        , ( "http://test-ddd-nuntius.pantheonsite.io", testPantheon )
-        , ( "http://live-ddd-nuntius.pantheonsite.io", livePantheon )
+        [ ( "dev-ddd-nuntius.pantheonsite.io", devPantheon )
+        , ( "test-ddd-nuntius.pantheonsite.io", testPantheon )
+        , ( "live-ddd-nuntius.pantheonsite.io", livePantheon )
         ]
         |> Dict.union localConfigs
