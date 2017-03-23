@@ -8,15 +8,15 @@ import Pusher.Model exposing (Cluster(..), PusherAppKey)
 
 devPantheon : Model
 devPantheon =
-    { backendUrl = "https://dev-drupal-elm-starter.pantheonsite.io"
+    { backendUrl = "http://dev-ddd-nuntius.pantheonsite.io"
     , name = "devPantheon"
-    , pusherKey = PusherAppKey "" UsEast1
+    , pusherKey = PusherAppKey "4d86cb3a71b2412a2ab5" UsEast1
     }
 
 
 testPantheon : Model
 testPantheon =
-    { backendUrl = "https://test-drupal-elm-starter.pantheonsite.io"
+    { backendUrl = "http://test-ddd-nuntius.pantheonsite.io"
     , name = "testPantheon"
     , pusherKey = PusherAppKey "" UsEast1
     }
@@ -24,7 +24,7 @@ testPantheon =
 
 livePantheon : Model
 livePantheon =
-    { backendUrl = "https://live-drupal-elm-starter.pantheonsite.io"
+    { backendUrl = "http://live-ddd-nuntius.pantheonsite.io"
     , name = "livePantheon"
     , pusherKey = PusherAppKey "" UsEast1
     }
