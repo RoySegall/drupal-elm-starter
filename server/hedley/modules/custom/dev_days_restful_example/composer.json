@@ -1,0 +1,15 @@
+{
+    "name": "roysegall/dev_days_restful_example",
+    "description": "DrupalDevDays RESTful example",
+    "type": "project",
+    "require": {
+        "pusher/pusher-php-server": "^2.6"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "RoySegall",
+            "email": "roy.segall@gizra.com"
+        }
+    ]
+}

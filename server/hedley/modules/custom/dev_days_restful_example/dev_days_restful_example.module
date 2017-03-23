@@ -1,0 +1,105 @@
+<?php
+/**
+ * @file
+ * Code for the DevDays RESTful example feature.
+ */
+
+include_once 'dev_days_restful_example.features.inc';
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function dev_days_restful_example_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'restful') {
+    return 'plugins/' . $plugin;
+  }
+
+  if ($module == 'entity_validator') {
+    return 'plugins/' . $plugin;
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function dev_days_restful_example_menu() {
+  $items = [];
+
+  $items['admin/config/development/dev-days-restful-example'] = [
+    'title' => 'Dev Days restful example configuration',
+    'description' => 'Setting the composer credential keys',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['dev_days_restful_example_pusher_settings'],
+    'access arguments' => ['dev_days_restful_example_manage_pusher'],
+  ];
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function dev_days_restful_example_permission() {
+  return [
+    'dev days restful example manager pusher' => [
+      'title' => t('DevDays restful example manager pusher'),
+    ],
+  ];
+}
+
+/**
+ * Form callback; Setting up pusher settings.
+ */
+function dev_days_restful_example_pusher_settings($form, $form_state) {
+  $keys = ['pusher_app_id', 'pusher_app_key', 'pusher_app_secret'];
+
+  foreach ($keys as $key) {
+    $form[$key] = [
+      '#type' => 'textfield',
+      '#title' => ucfirst(str_replace('_', ' ', $key)),
+      '#default_value' => variable_get($key),
+    ];
+  }
+
+  return system_settings_form($form);
+}
+
+/**
+ * Get the pusher object.
+ *
+ * @return \Pusher
+ *   The pusher object.
+ */
+function dev_days_restful_example_get_pusher() {
+  $pusher = &drupal_static(__FUNCTION__);
+
+  if ($pusher) {
+    return $pusher;
+  }
+
+  $options = [
+    'encrypted' => TRUE,
+  ];
+
+  return new Pusher(variable_get('pusher_app_key'), variable_get('pusher_app_secret'), variable_get('pusher_app_id'), $options);
+}
+
+/**
+ * Trigger a Pusher event.
+ *
+ * @param string $channel_name
+ *   The channel name.
+ * @param string $event_name
+ *   The event name.
+ * @param array $data
+ *   The data to transmit.
+ *
+ * @throws \PusherException
+ *
+ * @return bool
+ *   The return value of the Pusher trigger action.
+ */
+function dev_days_restful_example_push($channel_name, $event_name, array $data = array()) {
+  $pusher = dev_days_restful_example_get_pusher();
+  return $pusher->trigger($channel_name, $event_name, $data);
+}

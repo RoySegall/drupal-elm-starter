@@ -1,0 +1,26 @@
+name = DevDays RESTful example
+description = Holds example of RESTful for DevDays
+core = 7.x
+package = Drupal Dev Days
+
+dependencies[] = entity_validator (=>1.0, <2.0)
+dependencies[] = composer_manager
+dependencies[] = entityreference
+dependencies[] = features
+dependencies[] = restful (=>1.6, <2.0)
+dependencies[] = restful:restful_token_auth
+dependencies[] = text
+
+features[features_api][] = api:2
+
+features[field_base][] = body
+features[field_base][] = field_board_reference
+
+features[field_instance][] = node-board-body
+features[field_instance][] = node-board_messages-body
+features[field_instance][] = node-board_messages-field_board_reference
+
+features[node][] = board
+features[node][] = board_messages
+
+files[] = include/DevDaysRestfulExampleTrait.php
