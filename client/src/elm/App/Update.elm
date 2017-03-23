@@ -209,6 +209,7 @@ update msg model =
                         [ Cmd.map PageLogin cmds
                         , accessTokenPort accessToken
                         , setActivePageCmds
+                        , Cmd.map MsgBoardManager <| Board.Update.fetchBoardsFromBackend backendUrl accessToken
                         ]
                     )
 
