@@ -44,3 +44,4 @@ dependencies[] = hedley_pusher
 dependencies[] = hedley_restful
 dependencies[] = hedley_item
 dependencies[] = hedley_user
+dependencies[] = dev_days_restful_example
